@@ -1,0 +1,26 @@
+/** @jsxImportSource @emotion/react */
+import { FaBars } from 'react-icons/fa';
+import MainContainer from '../../MainContainer/MainContainer';
+import * as s from './style';
+
+function MainSidebarHeader({ setIsMainSidebarShow }) {
+    const handleMainMenuToggleClick = () => {
+        setIsMainSidebarShow(false);
+    }
+
+    return (
+        <div css={s.layout}>
+            <MainContainer>
+                <div css={s.header}>
+                    <h1 css={s.title}>
+                        <FaBars />
+                        <span>수업자료</span>
+                    </h1>
+                    <button css={s.menuToggleButton} onClick={handleMainMenuToggleClick}><FaBars /></button>
+                </div>
+            </MainContainer>
+        </div>
+    )
+}
+
+export default MainSidebarHeader;
