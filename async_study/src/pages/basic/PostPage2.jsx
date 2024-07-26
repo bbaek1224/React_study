@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { COLOR_OPTIONS, SIZE_OPTIONS } from '../../constants/productOptions';
 import axios from 'axios';
 
@@ -6,9 +6,36 @@ function PostPage2(props) {
     const [ product, setProduct ] = useState({
         productName: "",
         price: "",
-        size: "",
-        color: ""
+        sizeId: "",
+        colorId: ""
     })
+
+    const [ sizeOptions, setSizeOptions ] = useState([]);
+    const [ colorOptions, setColorOptions ] = useState([]);
+
+    useEffect(() => {
+        const getSizes = async () => {
+            const response = await axios.get("http://localhost:8080/api/v1/sizes");
+            setSizeOptions(response.data);
+            setProduct(product => ({
+                ...product,
+                sizeId: response.data[0].sizeId
+            }));
+        }
+
+        const getColors = async () => {
+            const response = await axios.get("http://localhost:8080/api/v1/colors");
+            setColorOptions(response.data);
+            setProduct(product => ({
+                ...product,
+                colorId: response.data[0].colorId
+            }));
+        }
+
+        getSizes();
+        getColors();
+
+    }, []);
 
     const handleInputChange = (e) => {
         setProduct(product => {
@@ -49,20 +76,20 @@ function PostPage2(props) {
                 </p>
                 <p>
                     <label htmlFor="">사이즈</label>
-                    <select name='size' onChange={handleInputChange}>
+                    <select name='size' onChange={handleInputChange} value={product.sizeId}>
                         {
-                            SIZE_OPTIONS.map(size => 
-                            <option key={size.id} value={size.id}>{size.name}</option>)
+                            sizeOptions.map(size => 
+                            <option key={size.sizeId} value={size.sizeId}>{size.sizeName}</option>)
                         }
                         <option></option>
                     </select>
                 </p>
                 <p>
                     <label htmlFor="">색상</label>
-                    <select name='color' onChange={handleInputChange}>
+                    <select name='color' onChange={handleInputChange} value={product.colorId}>
                         {
-                            COLOR_OPTIONS.map(color => 
-                            <option key={color.id} value={color.id}>{color.name}</option>)
+                            colorOptions.map(color => 
+                            <option key={color.colorId} value={color.colorId}>{color.colorName}</option>)
                         }
                     </select>
                 </p>
